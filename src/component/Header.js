@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../image/logo.png';
 import '../scss/materialize.scss';
+import '../scss/Login.scss';
 
 export default class Header extends Component {
     render(){

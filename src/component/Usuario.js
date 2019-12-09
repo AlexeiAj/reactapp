@@ -6,13 +6,17 @@ export default class Usuario extends Component {
 
     constructor() {
         super();
-        this.state = {errMsg: ''};
+        this.state = {errMsg: '', usuario: []};
+    }
+
+    componentDidMount(){
+        this.setState({usuario:  this.props.usuario});
     }
 
     salvar(e){
         e.preventDefault();
-        const uri = `http://alexeiaj.duckdns.org:8800/usuarios/${this.props.usuario.id}`;
-        
+        const uri = `http://localhost:8800/usuarios/${this.props.usuario.id}`;
+
         const requestInfo = {
             method: 'PUT',
             body: JSON.stringify({
@@ -27,7 +31,11 @@ export default class Usuario extends Component {
         fetch(uri, requestInfo)
             .then(response => {
                 if(response.ok){
-                    this.props.history.replace("/listaUsuarios");
+                    let usuarioNovo = {};
+                    usuarioNovo.login = this.login.value;
+                    usuarioNovo.senha = this.senha.value;
+                    usuarioNovo.id = this.state.usuario.id;
+                    this.setState({usuario: usuarioNovo});
                     return;
                 }
                 throw new Error("Não foi possível alterar o usuario.");
@@ -36,7 +44,7 @@ export default class Usuario extends Component {
     }
 
     excluir() {
-        const uri = `http://alexeiaj.duckdns.org:8800/usuarios/${this.props.usuario.id}`;
+        const uri = `http://localhost:8800/usuarios/${this.props.usuario.id}`;
         
         const requestInfo = {
             method: 'DELETE'
@@ -45,7 +53,7 @@ export default class Usuario extends Component {
         fetch(uri, requestInfo)
             .then(response => {
                 if(response.ok){
-                    this.props.history.replace("/listaUsuarios");
+                    this.props.recarregarUsuariosCallback();
                     return;
                 } 
                 throw new Error("Não foi possível deletar o usuario.");
@@ -55,7 +63,7 @@ export default class Usuario extends Component {
 
 
     render(){
-        let usuario = this.props.usuario;
+        let usuario = this.state.usuario;
 
         return (
             <tr className="linha">
@@ -69,13 +77,13 @@ export default class Usuario extends Component {
                                 <span>{this.state.errMsg}</span>
                                 <div className="row">
                                     <div className="input-field col s12">
-                                        <input placeholder="Login" defaultValue={usuario.login} type="text" id={`login${usuario.id}`} className="validate" ref={ input => this.login = input}/>
+                                        <input defaultValue={usuario.login} type="text" id={`login${usuario.id}`} className="validate" ref={ input => this.login = input}/>
                                         <label htmlFor={`login${usuario.id}`}>Login</label>
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="input-field col s12">
-                                        <input placeholder="Senha" type="password" id={`senha${usuario.id}`} className="validate" ref={ input => this.senha = input}/>
+                                        <input type="password" id={`senha${usuario.id}`} className="validate" ref={ input => this.senha = input}/>
                                         <label htmlFor={`senha${usuario.id}`}>Senha</label>
                                     </div>
                                 </div>
@@ -85,7 +93,7 @@ export default class Usuario extends Component {
                                 </button>
                             </form>
                         </Modal>
-                        <a className="waves-effect waves-light btn grey darken-4" on onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></a>
+                        <a className="waves-effect waves-light btn grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></a>
                         <input type="hidden" className="id" value={usuario.id}/>
                     </div>			
                 </td>

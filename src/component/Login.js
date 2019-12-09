@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import '../scss/Login.scss';
 import '../scss/materialize.scss';
 
 export default class Login extends Component {
@@ -13,7 +12,12 @@ export default class Login extends Component {
     logar(e){
         e.preventDefault();
         
-        const uri = "http://alexeiaj.duckdns.org:8800/auth";
+        if(this.login.value === '' || this.senha.value === ''){
+            this.setState({errMsg: 'Por favor preencha login e senha!'})
+            return;
+        }
+
+        const uri = "http://localhost:8800/auth";
         
         const requestInfo = {
             method: 'POST',
@@ -56,13 +60,13 @@ export default class Login extends Component {
                                 <span>{this.state.errMsg}</span>
                                 <div className="row">
                                     <div className="input-field col s12">
-                                        <input placeholder="Login" type="text" id="login" className="validate" ref={ input => this.login = input}/>
+                                        <input type="text" id="login" className="validate" ref={ input => this.login = input}/>
                                         <label htmlFor="login">Login</label>
                                     </div>
                                 </div>
                                 <div className="row">
                                     <div className="input-field col s12">
-                                        <input placeholder="Senha" type="password" id="senha" className="validate" ref={ input => this.senha = input}/>
+                                        <input type="password" id="senha" className="validate" ref={ input => this.senha = input}/>
                                         <label htmlFor="senha">Senha</label>
                                     </div>
                                 </div>
