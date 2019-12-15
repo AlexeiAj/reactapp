@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import '../scss/materialize.scss';
-import Usuario from './Usuario';
 import { Modal } from 'react-materialize';
+import Usuario from './Usuario';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
 
 export default class ListaUsuarios extends Component {
 
@@ -12,20 +13,20 @@ export default class ListaUsuarios extends Component {
     }
 
     componentDidMount(){
-        fetch('http://localhost:8800/usuarios')
+        fetch('http://alexeiaj.duckdns.org:8800/usuarios')
             .then(response => response.json())
             .then(usuarios => this.setState({usuarios: usuarios}));
     }
 
     recarregarUsuarios(){
-        fetch('http://localhost:8800/usuarios')
+        fetch('http://alexeiaj.duckdns.org:8800/usuarios')
             .then(response => response.json())
             .then(usuarios => this.setState({usuarios: usuarios}));
     }
 
     adicionar(e){
         e.preventDefault();
-        const uri = `http://localhost:8800/usuarios/`;
+        const uri = `http://alexeiaj.duckdns.org:8800/usuarios/`;
 
         const requestInfo = {
             method: 'POST',
@@ -52,13 +53,14 @@ export default class ListaUsuarios extends Component {
 
     render(){
         return (
-            <div>
+            <div className="container">
+                <Header/>
                 <h3>Bem vindo ao cadastro de usuarios!</h3>
                 <p>Lista de usuarios</p>
         
                 <div className="row">
                     <div className="col s12">
-                        <table className="table table-hover">
+                        <table className="table table-hover highlight">
                             <thead>
                                 <tr>
                                     <th>Id</th>
@@ -98,6 +100,7 @@ export default class ListaUsuarios extends Component {
                         </button>
                     </form>
                 </Modal>
+                <Footer/>
             </div>
         );
     }

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import '../scss/materialize.scss';
-import '../scss/Feed.scss';
 import { Modal } from 'react-materialize';
+import '../scss/Content.scss';
 
 export default class Feed extends Component {
 
     constructor() {
         super();
-        this.state = {content: [], post_conteudo: {}};
+        this.state = {content: [], post_conteudo: {}, openConsultar: false, openAlterar: false};
     }
     
     componentDidMount(){
@@ -15,11 +14,12 @@ export default class Feed extends Component {
         this.setState({post_conteudo: JSON.parse(this.props.content.post_conteudo)});
     }
 
-    excluir() {
+    excluir(e) {
+        if(e.stopPropagation) e.stopPropagation();
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
         
-        const uri = `http://localhost:8800/posts/${this.props.content.id}`;
+        const uri = `http://alexeiaj.duckdns.org:8800/posts/${this.props.content.id}`;
         const requestInfo = {
             method: 'DELETE',
             headers: new Headers({
@@ -44,7 +44,7 @@ export default class Feed extends Component {
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
 
-        const uri = `http://localhost:8800/posts/${this.props.content.id}`;
+        const uri = `http://alexeiaj.duckdns.org:8800/posts/${this.props.content.id}`;
 
         let post_conteudo = JSON.stringify({
                 texto: this.texto.value,
@@ -83,58 +83,36 @@ export default class Feed extends Component {
             .catch(e => this.setState({errMsg: e.message}));
     }
 
+    openCloseModalConsultar(isOpen){
+        if(this.state.openAlterar) return;
+        this.setState({ openConsultar: isOpen });
+    }
+
+    openCloseModalAlterar(isOpen, e){
+        this.setState({ openAlterar: isOpen });
+        if(e.stopPropagation) e.stopPropagation();
+    }
+
     render(){
         let content = this.state.content;
         let jsonContent = this.state.post_conteudo;
+        let optionsConsultar = {
+            onCloseEnd: () => this.openCloseModalConsultar(false)
+        }
+        let optionsAlterar = {
+            onCloseEnd: this.openCloseModalAlterar.bind(this, false)
+        }
 
         return (
             <div className="row">
                 <div className="col s12">
                     <div className="card">
-                        <div className="card-image">
-                            <div className="div-image"><img src={`http://localhost:8800${jsonContent.imagem}`}></img></div>
+                        <div className="card-image" onClick={() => this.openCloseModalConsultar(true)}>
+                            <div className="div-image"><img src={`http://alexeiaj.duckdns.org:8800${jsonContent.imagem}`}></img></div>
                             <span className="card-title">{content.post_titulo}</span>
 
                             <a className="btn-floating halfway-fab waves-effect waves-light grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></a>
-                            <Modal header="Alterar post" trigger={<a className="btn-floating halfway-fab waves-effect waves-light grey darken-4 right-button"><i className="material-icons">create</i></a>}>
-                                <form className="col s12" onSubmit={this.salvar.bind(this)} method="post">
-                                    <span>{this.state.errMsg}</span>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input defaultValue={content.post_titulo} type="text" id={`post_titulo${content.id}`} className="validate" ref={ input => this.post_titulo = input}/>
-                                            <label htmlFor={`post_titulo${content.id}`}>Título</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input defaultValue={content.post_data} type="text" id={`post_data${content.id}`} className="validate" ref={ input => this.post_data = input}/>
-                                            <label htmlFor={`post_data${content.id}`}>Data</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input defaultValue={content.post_categoria} type="text" id={`post_categoria${content.id}`} className="validate" ref={ input => this.post_categoria = input}/>
-                                            <label htmlFor={`post_categoria${content.id}`}>Categoria</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input defaultValue={jsonContent.texto} type="text" id={`texto${content.id}`} className="validate" ref={ input => this.texto = input}/>
-                                            <label htmlFor={`texto${content.id}`}>Texto</label>
-                                        </div>
-                                    </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <label><b>Imagem</b> {jsonContent.imagem}</label>
-                                        </div>
-                                    </div>
-                                    <br/>
-                                    <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
-                                        Alterar
-                                        <i className="material-icons right">send</i>
-                                    </button>
-                                </form>
-                            </Modal>
+                            <a className="btn-floating halfway-fab waves-effect waves-light grey darken-4 right-button" onClick={this.openCloseModalAlterar.bind(this, true)}><i className="material-icons">create</i></a>
                         </div>
                         <div className="card-content">
                             {jsonContent.texto}
@@ -142,6 +120,64 @@ export default class Feed extends Component {
                         </div>
                     </div>
                 </div>
+                <Modal header="Alterar post" open={this.state.openAlterar} options={optionsAlterar}>
+                    <form className="col s12" onSubmit={this.salvar.bind(this)} method="post">
+                        <span>{this.state.errMsg}</span>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <input defaultValue={content.post_titulo} type="text" id={`post_titulo${content.id}`} className="validate" ref={ input => this.post_titulo = input}/>
+                                <label htmlFor={`post_titulo${content.id}`} className="active">Título</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <input defaultValue={content.post_data} type="text" id={`post_data${content.id}`} className="validate" ref={ input => this.post_data = input}/>
+                                <label htmlFor={`post_data${content.id}`} className="active">Data</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <input defaultValue={content.post_categoria} type="text" id={`post_categoria${content.id}`} className="validate" ref={ input => this.post_categoria = input}/>
+                                <label htmlFor={`post_categoria${content.id}`} className="active">Categoria</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <input defaultValue={jsonContent.texto} type="text" id={`texto${content.id}`} className="validate" ref={ input => this.texto = input}/>
+                                <label htmlFor={`texto${content.id}`} className="active">Texto</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <label><b>Imagem</b> {jsonContent.imagem}</label>
+                            </div>
+                        </div>
+                        <br/>
+                        <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
+                            Alterar
+                            <i className="material-icons right">send</i>
+                        </button>
+                    </form>
+                </Modal>
+                <Modal header={content.post_titulo} open={this.state.openConsultar} options={optionsConsultar}>
+                    <form className="col s12">
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <div className="img-consulta"><img src={`http://alexeiaj.duckdns.org:8800${jsonContent.imagem}`}></img></div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <label><b>Data</b> {content.post_data} <b>Categoria</b> {content.post_categoria}</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <label>{jsonContent.texto}</label>
+                            </div>
+                        </div>
+                    </form>
+                </Modal>
             </div>
         );
     }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import '../scss/materialize.scss';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
 
 export default class Login extends Component {
 
@@ -17,7 +18,7 @@ export default class Login extends Component {
             return;
         }
 
-        const uri = "http://localhost:8800/auth";
+        const uri = "http://alexeiaj.duckdns.org:8800/auth";
         
         const requestInfo = {
             method: 'POST',
@@ -48,7 +49,8 @@ export default class Login extends Component {
 
     render(){
         return (
-            <div>
+            <div className="container">
+                <Header/>
                 <h3>Bem vindo ao meu website!</h3>
                 <p>Pagina de login</p>
         
@@ -81,6 +83,7 @@ export default class Login extends Component {
                 </div>
 
                 <Link to="/listaUsuarios" className="waves-effect waves-light btn grey darken-4">Lista de usuarios</Link>
+                <Footer/>
             </div>
         );
     }

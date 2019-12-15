@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import '../scss/materialize.scss';
+import { Modal } from 'react-materialize';
 import '../scss/Feed.scss';
 import Content from './Content';
-import { Modal } from 'react-materialize';
+import Header from '../component/Header';
+import Footer from '../component/Footer';
+import Navbar from '../component/Navbar';
 
 export default class Feed extends Component {
 
@@ -21,7 +23,7 @@ export default class Feed extends Component {
                 })
             };
         
-        fetch('http://localhost:8800/posts', requestInfo)
+        fetch('http://alexeiaj.duckdns.org:8800/posts', requestInfo)
             .then(response => response.json())
             .then(posts => this.setState({posts: posts}));
     }
@@ -36,7 +38,7 @@ export default class Feed extends Component {
                 })
             };
         
-        fetch('http://localhost:8800/posts', requestInfo)
+        fetch('http://alexeiaj.duckdns.org:8800/posts', requestInfo)
             .then(response => response.json())
             .then(posts => this.setState({posts: posts}));
     }
@@ -52,7 +54,7 @@ export default class Feed extends Component {
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
 
-        const uri = `http://localhost:8800/posts/`;
+        const uri = `http://alexeiaj.duckdns.org:8800/posts/`;
 
         let post_conteudo = JSON.stringify({
                 texto: this.texto.value,
@@ -88,50 +90,55 @@ export default class Feed extends Component {
     render(){
         return (
             <div>
-                {
-                    this.state.posts.map(content => <Content key={content.id} content={content} recarregarFeedCallback={() => this.recarregarFeed()}/>)
-                }
-                <Modal header="Adicionar post" trigger={<a className="waves-effect waves-light btn grey darken-4">Adicionar</a>}>
-                    <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
-                        <span>{this.state.errMsg}</span>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input type="text" id={'post_titulo'} className="validate" ref={ input => this.post_titulo = input}/>
-                                <label htmlFor={'post_titulo'}>Título</label>
+                <Navbar/>
+                <Header/>
+                <div className="container">
+                    {
+                        this.state.posts.map(content => <Content key={content.id} content={content} recarregarFeedCallback={() => this.recarregarFeed()}/>)
+                    }
+                    <Modal header="Adicionar post" trigger={<a className="waves-effect waves-light btn grey darken-4">Adicionar</a>}>
+                        <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
+                            <span>{this.state.errMsg}</span>
+                            <div className="row">
+                                <div className="input-field col s12">
+                                    <input type="text" id={'post_titulo'} className="validate" ref={ input => this.post_titulo = input}/>
+                                    <label htmlFor={'post_titulo'}>Título</label>
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input type="text" id={'post_data'} className="validate" ref={ input => this.post_data = input}/>
-                                <label htmlFor={'post_data'}>Data</label>
+                            <div className="row">
+                                <div className="input-field col s12">
+                                    <input type="text" id={'post_data'} className="validate" ref={ input => this.post_data = input}/>
+                                    <label htmlFor={'post_data'}>Data</label>
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input type="text" id={'post_categoria'} className="validate" ref={ input => this.post_categoria = input}/>
-                                <label htmlFor={'post_categoria'}>Categoria</label>
+                            <div className="row">
+                                <div className="input-field col s12">
+                                    <input type="text" id={'post_categoria'} className="validate" ref={ input => this.post_categoria = input}/>
+                                    <label htmlFor={'post_categoria'}>Categoria</label>
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input type="text" id={'texto'} className="validate" ref={ input => this.texto = input}/>
-                                <label htmlFor={'texto'}>Texto</label>
+                            <div className="row">
+                                <div className="input-field col s12">
+                                    <input type="text" id={'texto'} className="validate" ref={ input => this.texto = input}/>
+                                    <label htmlFor={'texto'}>Texto</label>
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input type="text" id={'imagem'} className="validate" ref={ input => this.imagem = input}/>
-                                <label htmlFor={'imagem'}>Imagem</label>
+                            <div className="row">
+                                <div className="input-field col s12">
+                                    <input type="text" id={'imagem'} className="validate" ref={ input => this.imagem = input}/>
+                                    <label htmlFor={'imagem'}>Imagem</label>
+                                </div>
                             </div>
-                        </div>
-                        <br/>
-                        <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
-                            Adicionar
-                            <i className="material-icons right">send</i>
-                        </button>
-                    </form>
-                </Modal>
-                <a className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</a>
+                            <br/>
+                            <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
+                                Adicionar
+                                <i className="material-icons right">send</i>
+                            </button>
+                        </form>
+                    </Modal>
+                    <a className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</a>
+                    <Footer/>
+                </div>
             </div>
         );
     }
