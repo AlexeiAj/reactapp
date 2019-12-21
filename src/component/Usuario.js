@@ -87,10 +87,9 @@ export default class Usuario extends Component {
                 <td><span>{usuario.senha}</span></td>
                 <td>
                     <div>
-                        <a className="waves-effect waves-light btn grey darken-4" onClick={this.openCloseModalAlterar.bind(this, true)}><i className="material-icons">create</i></a>
-                        <a className="waves-effect waves-light btn grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></a>
-                        <input type="hidden" className="id" value={usuario.id}/>
-                    </div>		
+                        <div className="waves-effect waves-light btn grey darken-4" onClick={this.openCloseModalAlterar.bind(this, true)}><i className="material-icons">create</i></div>
+                        <div className="waves-effect waves-light btn grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></div>
+                    </div>
                 </td>
                 <Modal header="Alterar usuario" open={this.state.openAlterar} options={optionsAlterar}>
                     <form className="col s12" onSubmit={this.salvar.bind(this)} method="post">

@@ -41,7 +41,7 @@ export default class ListaFotos extends Component {
 
         return (
             <div>
-                <a className="waves-effect waves-light btn grey darken-4" onClick={() => this.openCloseModalConsultar(true)}>Galeria</a>
+                <div className="waves-effect waves-light btn grey darken-4" onClick={() => this.openCloseModalConsultar(true)}>Galeria</div>
                 <Modal header="Galeria" open={this.state.openConsultar} options={optionsConsultar}>
                     <div className="container">
                         <div className="row">
@@ -51,7 +51,7 @@ export default class ListaFotos extends Component {
                                         <div className="card">
                                             <div className="card-image listaFotos" onClick={() => this.selecionarFoto(foto.imagem_path + foto.imagem_name)}>
                                                 <div className="imagem-galeria">
-                                                    <img src={`${this.props.url}${foto.imagem_path}${foto.imagem_name}`}></img>
+                                                    <img src={`${this.props.url}${foto.imagem_path}${foto.imagem_name}`} alt="ext"></img>
                                                 </div>
                                             </div>
                                         </div>

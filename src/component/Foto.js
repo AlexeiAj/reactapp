@@ -52,8 +52,8 @@ export default class Foto extends Component {
             <div className="col s4">
                 <div className="card">
                     <div className="card-image" onClick={() => this.openCloseModalConsultar(true)}>
-                        <div className="div-image"><img src={`${this.props.url}${foto.imagem_path}${foto.imagem_name}`}></img></div>
-                        <a className="btn-floating halfway-fab waves-effect waves-light grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></a>
+                        <div className="div-image"><img src={`${this.props.url}${foto.imagem_path}${foto.imagem_name}`} alt="ext"></img></div>
+                        <div className="btn-floating halfway-fab waves-effect waves-light grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></div>
                     </div>
                     <div className="card-content">
                         {foto.imagem_name}
@@ -63,7 +63,7 @@ export default class Foto extends Component {
                     <form className="col s12">
                         <div className="row">
                             <div className="input-field col s12">
-                                <div className="img-consulta"><img src={`${this.props.url}${foto.imagem_path}${foto.imagem_name}`}></img></div>
+                                <div className="img-consulta"><img src={`${this.props.url}${foto.imagem_path}${foto.imagem_name}`} alt="ext"></img></div>
                             </div>
                         </div>
                     </form>

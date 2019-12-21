@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-materialize';
+import { Modal, DatePicker } from 'react-materialize';
 import '../scss/Content.scss';
 import ListaFotos from '../component/ListaFotos';
 
@@ -10,7 +10,7 @@ export default class Content extends Component {
         this.state = {content: [], post_conteudo: {}, openConsultar: false, openAlterar: false};
     }
     
-    componentDidMount(){
+    componentWillMount(){
         this.setState({content: this.props.content});
         this.setState({post_conteudo: JSON.parse(this.props.content.post_conteudo)});
     }
@@ -44,6 +44,8 @@ export default class Content extends Component {
 
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
+        
+        this.post_data = `${this.post_data.getFullYear()}-${this.post_data.getMonth()+1}-${this.post_data.getDate()}`;
 
         const uri = `${this.props.url}/posts/${this.props.content.id}`;
 
@@ -56,7 +58,7 @@ export default class Content extends Component {
             method: 'PUT',
             body: JSON.stringify({
                 post_titulo: this.post_titulo.value,
-                post_data: this.post_data.value,
+                post_data: this.post_data,
                 post_categoria: this.post_categoria.value,
                 post_conteudo: post_conteudo
             }),
@@ -71,7 +73,7 @@ export default class Content extends Component {
                 if(response.ok){
                     let postNovo = {};
                     postNovo.post_titulo = this.post_titulo.value;
-                    postNovo.post_data = this.post_data.value;
+                    postNovo.post_data = this.post_data;
                     postNovo.post_categoria = this.post_categoria.value;
                     postNovo.post_conteudo = post_conteudo;
                     postNovo.id = this.state.content.id;
@@ -98,8 +100,16 @@ export default class Content extends Component {
         if(e.stopPropagation) e.stopPropagation();
     }
 
+    convertDate(date){
+        let dateArr = date.split('-');
+        let dateObt = new Date(dateArr[0], dateArr[1]-1, dateArr[2]);
+        this.post_data = dateObt;
+        return dateObt;
+    }
+
     render(){
         let content = this.state.content;
+        let dateOptions = {defaultDate: this.convertDate(content.post_data), setDefaultDate: true};
         let jsonContent = this.state.post_conteudo;
         let optionsConsultar = {
             onCloseEnd: () => this.openCloseModalConsultar(false)
@@ -113,11 +123,11 @@ export default class Content extends Component {
                 <div className="col s12">
                     <div className="card">
                         <div className="card-image" onClick={() => this.openCloseModalConsultar(true)}>
-                            <div className="div-image"><img src={`${this.props.url}${jsonContent.imagem}`}></img></div>
+                            <div className="div-image"><img src={`${this.props.url}${jsonContent.imagem}`} alt="ext"></img></div>
                             <span className="card-title">{content.post_titulo}</span>
 
-                            <a className="btn-floating halfway-fab waves-effect waves-light grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></a>
-                            <a className="btn-floating halfway-fab waves-effect waves-light grey darken-4 right-button" onClick={this.openCloseModalAlterar.bind(this, true)}><i className="material-icons">create</i></a>
+                            <div className="btn-floating halfway-fab waves-effect waves-light grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></div>
+                            <div className="btn-floating halfway-fab waves-effect waves-light grey darken-4 right-button" onClick={this.openCloseModalAlterar.bind(this, true)}><i className="material-icons">create</i></div>
                         </div>
                         <div className="card-content">
                             {jsonContent.texto}
@@ -136,7 +146,7 @@ export default class Content extends Component {
                         </div>
                         <div className="row">
                             <div className="input-field col s12">
-                                <input defaultValue={content.post_data} type="text" id={`post_data${content.id}`} className="validate" ref={ input => this.post_data = input}/>
+                                <DatePicker options={dateOptions} type="text" id={`post_data${content.id}`} className="validate" onChange={ input => this.post_data = input}/>
                                 <label htmlFor={`post_data${content.id}`} className="active">Data</label>
                             </div>
                         </div>
@@ -169,7 +179,7 @@ export default class Content extends Component {
                     <form className="col s12">
                         <div className="row">
                             <div className="input-field col s12">
-                                <div className="img-consulta"><img src={`${this.props.url}${jsonContent.imagem}`}></img></div>
+                                <div className="img-consulta"><img src={`${this.props.url}${jsonContent.imagem}`} alt="ext"></img></div>
                             </div>
                         </div>
                         <div className="row">

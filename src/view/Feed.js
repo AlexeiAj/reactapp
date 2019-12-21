@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal } from 'react-materialize';
+import { Modal, DatePicker } from 'react-materialize';
 import '../scss/Feed.scss';
 import Content from '../component/Content';
 import Header from '../component/Header';
@@ -11,11 +11,12 @@ export default class Feed extends Component {
 
     constructor() {
         super();
+        
         // this.state = {posts: [], url: 'http://alexeiaj.duckdns.org:8800'};
         this.state = {posts: [], url: 'http://localhost:8800', search: null};
     }
-
-    componentWillMount(){
+    
+    componentDidMount(){
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
 
@@ -31,23 +32,23 @@ export default class Feed extends Component {
             .then(response => response.json())
             .then(posts => this.setState({posts: posts}));
     }
-
+    
     recarregarFeed(search){
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
-
+        
         let requestInfo = {
-                headers: new Headers({
-                    'Authorization': token
-                })
-            };
-
+            headers: new Headers({
+                'Authorization': token
+            })
+        };
+        
         let uri = `${this.state.url}/posts`;
         if(search != null) uri += '?search=' + search;
-        console.log(uri);
+        
         fetch(uri, requestInfo)
-            .then(response => response.json())
-            .then(posts => this.setState({posts: posts}));
+        .then(response => response.json())
+        .then(posts => this.setState({posts: posts}));
     }
 
     deslogar(){
@@ -60,6 +61,8 @@ export default class Feed extends Component {
 
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
+        
+        this.post_data = `${this.post_data.getFullYear()}-${this.post_data.getMonth()+1}-${this.post_data.getDate()}`;
 
         const uri = `${this.state.url}/posts/`;
 
@@ -72,7 +75,7 @@ export default class Feed extends Component {
             method: 'POST',
             body: JSON.stringify({
                 post_titulo: this.post_titulo.value,
-                post_data: this.post_data.value,
+                post_data: this.post_data,
                 post_categoria: this.post_categoria.value,
                 post_conteudo: post_conteudo
             }),
@@ -85,7 +88,7 @@ export default class Feed extends Component {
         fetch(uri, requestInfo)
             .then(response => {
                 if(response.ok){
-                    this.post_titulo.value = this.post_data.value = this.post_categoria.value = this.texto.value = this.imagem.value = '';
+                    this.post_titulo.value = this.post_data = this.post_categoria.value = this.texto.value = this.imagem.value = '';
                     this.recarregarFeed();
                     return;
                 }
@@ -107,7 +110,7 @@ export default class Feed extends Component {
                     {
                         this.state.posts.map(content => <Content key={content.id} content={content} url={this.state.url} recarregarFeedCallback={() => this.recarregarFeed()}/>)
                     }
-                    <Modal header="Adicionar post" trigger={<a className="waves-effect waves-light btn grey darken-4">Adicionar</a>}>
+                    <Modal header="Adicionar post" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
                         <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
                             <span>{this.state.errMsg}</span>
                             <div className="row">
@@ -118,7 +121,7 @@ export default class Feed extends Component {
                             </div>
                             <div className="row">
                                 <div className="input-field col s12">
-                                    <input type="text" id={'post_data'} className="validate" ref={ input => this.post_data = input}/>
+                                    <DatePicker type="text" id={'post_data'} className="validate" onChange={input => this.post_data = input}/>
                                     <label htmlFor={'post_data'}>Data</label>
                                 </div>
                             </div>
@@ -147,7 +150,7 @@ export default class Feed extends Component {
                             </button>
                         </form>
                     </Modal>
-                    <a className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</a>
+                    <div className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</div>
                     <Footer/>
                 </div>
             </div>

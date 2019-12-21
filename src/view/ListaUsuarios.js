@@ -80,7 +80,7 @@ export default class ListaUsuarios extends Component {
                 </div>
 
                 <Link to="/" className="waves-effect waves-light btn grey darken-4">Entrar</Link>
-                <Modal header="Adicionar usuario" trigger={<a className="waves-effect waves-light btn grey darken-4">Adicionar</a>}>
+                <Modal header="Adicionar usuario" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
                     <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
                         <span>{this.state.errMsg}</span>
                         <div className="row">

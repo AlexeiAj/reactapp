@@ -90,7 +90,7 @@ export default class Galeria extends Component {
                             this.state.fotos.map(foto => <Foto key={foto.id} foto={foto} url={this.state.url} recarregarGaleriaCallback={() => this.recarregarGaleria()}/>)
                         }
                     </div>
-                    <Modal header="Adicionar foto" trigger={<a className="waves-effect waves-light btn grey darken-4">Adicionar</a>}>
+                    <Modal header="Adicionar foto" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
                         <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post" encType="multipart/form-data">
                             <span>{this.state.errMsg}</span>
                             <div className="row">
@@ -111,7 +111,7 @@ export default class Galeria extends Component {
                             </button>
                         </form>
                     </Modal>
-                        <a className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</a>
+                        <div className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</div>
                     <Footer/>
                 </div>
             </div>
