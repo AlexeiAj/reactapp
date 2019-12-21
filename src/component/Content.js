@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Modal } from 'react-materialize';
 import '../scss/Content.scss';
+import ListaFotos from '../component/ListaFotos';
 
-export default class Feed extends Component {
+export default class Content extends Component {
 
     constructor() {
         super();
@@ -19,7 +20,7 @@ export default class Feed extends Component {
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
         
-        const uri = `http://alexeiaj.duckdns.org:8800/posts/${this.props.content.id}`;
+        const uri = `${this.props.url}/posts/${this.props.content.id}`;
         const requestInfo = {
             method: 'DELETE',
             headers: new Headers({
@@ -44,7 +45,7 @@ export default class Feed extends Component {
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
 
-        const uri = `http://alexeiaj.duckdns.org:8800/posts/${this.props.content.id}`;
+        const uri = `${this.props.url}/posts/${this.props.content.id}`;
 
         let post_conteudo = JSON.stringify({
                 texto: this.texto.value,
@@ -83,6 +84,10 @@ export default class Feed extends Component {
             .catch(e => this.setState({errMsg: e.message}));
     }
 
+    selecionarFotoGaleria(path){
+        this.imagem.value = path;
+    }
+
     openCloseModalConsultar(isOpen){
         if(this.state.openAlterar) return;
         this.setState({ openConsultar: isOpen });
@@ -108,7 +113,7 @@ export default class Feed extends Component {
                 <div className="col s12">
                     <div className="card">
                         <div className="card-image" onClick={() => this.openCloseModalConsultar(true)}>
-                            <div className="div-image"><img src={`http://alexeiaj.duckdns.org:8800${jsonContent.imagem}`}></img></div>
+                            <div className="div-image"><img src={`${this.props.url}${jsonContent.imagem}`}></img></div>
                             <span className="card-title">{content.post_titulo}</span>
 
                             <a className="btn-floating halfway-fab waves-effect waves-light grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></a>
@@ -147,9 +152,10 @@ export default class Feed extends Component {
                                 <label htmlFor={`texto${content.id}`} className="active">Texto</label>
                             </div>
                         </div>
+                        <ListaFotos url={this.props.url} selecionarCallback={this.selecionarFotoGaleria.bind(this)}/>
                         <div className="row">
                             <div className="input-field col s12">
-                                <label><b>Imagem</b> {jsonContent.imagem}</label>
+                                <input type="text" defaultValue={jsonContent.imagem} readOnly id={`imagem${content.id}`} className="validate" ref={ input => this.imagem = input}/>
                             </div>
                         </div>
                         <br/>
@@ -163,7 +169,7 @@ export default class Feed extends Component {
                     <form className="col s12">
                         <div className="row">
                             <div className="input-field col s12">
-                                <div className="img-consulta"><img src={`http://alexeiaj.duckdns.org:8800${jsonContent.imagem}`}></img></div>
+                                <div className="img-consulta"><img src={`${this.props.url}${jsonContent.imagem}`}></img></div>
                             </div>
                         </div>
                         <div className="row">

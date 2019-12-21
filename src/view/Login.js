@@ -7,7 +7,8 @@ export default class Login extends Component {
 
     constructor() {
         super();
-        this.state = {login: '', senha: '', errMsg: ''};
+        // this.state = {login: '', senha: '', errMsg: '', url: 'http://alexeiaj.duckdns.org:8800'};
+        this.state = {login: '', senha: '', errMsg: '', url: 'http://localhost:8800'};
     }
 
     logar(e){
@@ -18,7 +19,7 @@ export default class Login extends Component {
             return;
         }
 
-        const uri = "http://alexeiaj.duckdns.org:8800/auth";
+        const uri = `${this.state.url}/auth`;
         
         const requestInfo = {
             method: 'POST',

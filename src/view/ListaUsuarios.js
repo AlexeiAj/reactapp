@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Modal } from 'react-materialize';
-import Usuario from './Usuario';
+import Usuario from '../component/Usuario';
 import Header from '../component/Header';
 import Footer from '../component/Footer';
 
@@ -9,24 +9,25 @@ export default class ListaUsuarios extends Component {
 
     constructor() {
         super();
-        this.state = {usuarios: []};
+        // this.state = {usuarios: [], url: 'http://alexeiaj.duckdns.org:8800'};
+        this.state = {usuarios: [], url: 'http://localhost:8800'};
     }
 
     componentDidMount(){
-        fetch('http://alexeiaj.duckdns.org:8800/usuarios')
+        fetch(`${this.state.url}/usuarios`)
             .then(response => response.json())
             .then(usuarios => this.setState({usuarios: usuarios}));
     }
 
     recarregarUsuarios(){
-        fetch('http://alexeiaj.duckdns.org:8800/usuarios')
+        fetch(`${this.state.url}/usuarios`)
             .then(response => response.json())
             .then(usuarios => this.setState({usuarios: usuarios}));
     }
 
     adicionar(e){
         e.preventDefault();
-        const uri = `http://alexeiaj.duckdns.org:8800/usuarios/`;
+        const uri = `${this.state.url}/usuarios/`;
 
         const requestInfo = {
             method: 'POST',
@@ -71,7 +72,7 @@ export default class ListaUsuarios extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    this.state.usuarios.map(usuario => <Usuario key={usuario.id} usuario={usuario} recarregarUsuariosCallback={() => this.recarregarUsuarios()}/>)
+                                    this.state.usuarios.map(usuario => <Usuario key={usuario.id} usuario={usuario} url={this.state.url} recarregarUsuariosCallback={() => this.recarregarUsuarios()}/>)
                                 }
                             </tbody>
                         </table>

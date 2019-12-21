@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { Modal } from 'react-materialize';
 import '../scss/Feed.scss';
-import Content from './Content';
+import Content from '../component/Content';
 import Header from '../component/Header';
 import Footer from '../component/Footer';
 import Navbar from '../component/Navbar';
+import ListaFotos from '../component/ListaFotos';
 
 export default class Feed extends Component {
 
     constructor() {
         super();
-        this.state = {posts: []};
+        // this.state = {posts: [], url: 'http://alexeiaj.duckdns.org:8800'};
+        this.state = {posts: [], url: 'http://localhost:8800', search: null};
     }
 
     componentWillMount(){
@@ -19,16 +21,18 @@ export default class Feed extends Component {
 
         let requestInfo = {
                 headers: new Headers({
-                    'Authorization': token
+                    'Authorization': token,
                 })
             };
         
-        fetch('http://alexeiaj.duckdns.org:8800/posts', requestInfo)
+        let uri = `${this.state.url}/posts`;
+
+        fetch(uri, requestInfo)
             .then(response => response.json())
             .then(posts => this.setState({posts: posts}));
     }
 
-    recarregarFeed(){
+    recarregarFeed(search){
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
 
@@ -37,8 +41,11 @@ export default class Feed extends Component {
                     'Authorization': token
                 })
             };
-        
-        fetch('http://alexeiaj.duckdns.org:8800/posts', requestInfo)
+
+        let uri = `${this.state.url}/posts`;
+        if(search != null) uri += '?search=' + search;
+        console.log(uri);
+        fetch(uri, requestInfo)
             .then(response => response.json())
             .then(posts => this.setState({posts: posts}));
     }
@@ -54,7 +61,7 @@ export default class Feed extends Component {
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
 
-        const uri = `http://alexeiaj.duckdns.org:8800/posts/`;
+        const uri = `${this.state.url}/posts/`;
 
         let post_conteudo = JSON.stringify({
                 texto: this.texto.value,
@@ -87,14 +94,18 @@ export default class Feed extends Component {
             .catch(e => this.setState({errMsg: e.message}));
     }
 
+    selecionarFotoGaleria(path){
+        this.imagem.value = path;
+    }
+
     render(){
         return (
             <div>
-                <Navbar/>
+                <Navbar recarregarFeedCallback={this.recarregarFeed.bind(this)}/>
                 <Header/>
                 <div className="container">
                     {
-                        this.state.posts.map(content => <Content key={content.id} content={content} recarregarFeedCallback={() => this.recarregarFeed()}/>)
+                        this.state.posts.map(content => <Content key={content.id} content={content} url={this.state.url} recarregarFeedCallback={() => this.recarregarFeed()}/>)
                     }
                     <Modal header="Adicionar post" trigger={<a className="waves-effect waves-light btn grey darken-4">Adicionar</a>}>
                         <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
@@ -123,10 +134,10 @@ export default class Feed extends Component {
                                     <label htmlFor={'texto'}>Texto</label>
                                 </div>
                             </div>
+                            <ListaFotos url={this.state.url} selecionarCallback={this.selecionarFotoGaleria.bind(this)}/>
                             <div className="row">
                                 <div className="input-field col s12">
-                                    <input type="text" id={'imagem'} className="validate" ref={ input => this.imagem = input}/>
-                                    <label htmlFor={'imagem'}>Imagem</label>
+                                    <input type="text" readOnly id={'imagem'} className="validate" ref={ input => this.imagem = input}/>
                                 </div>
                             </div>
                             <br/>

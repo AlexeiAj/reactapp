@@ -14,8 +14,8 @@ export default class Usuario extends Component {
 
     salvar(e){
         e.preventDefault();
-        const uri = `http://alexeiaj.duckdns.org:8800/usuarios/${this.props.usuario.id}`;
-
+        const uri = `${this.props.url}/usuarios/${this.props.usuario.id}`;
+        
         const requestInfo = {
             method: 'PUT',
             body: JSON.stringify({
@@ -26,7 +26,7 @@ export default class Usuario extends Component {
                 'Content-type': 'application/json'
             })
         }
-
+        
         fetch(uri, requestInfo)
             .then(response => {
                 if(response.ok){
@@ -44,7 +44,7 @@ export default class Usuario extends Component {
 
     excluir(e) {
         if(e.stopPropagation) e.stopPropagation();
-        const uri = `http://alexeiaj.duckdns.org:8800/usuarios/${this.props.usuario.id}`;
+        const uri = `${this.props.url}/usuarios/${this.props.usuario.id}`;
         
         const requestInfo = {
             method: 'DELETE'
@@ -93,7 +93,7 @@ export default class Usuario extends Component {
                     </div>		
                 </td>
                 <Modal header="Alterar usuario" open={this.state.openAlterar} options={optionsAlterar}>
-                    <form className="col s12" onSubmit={() => this.salvar()} method="post">
+                    <form className="col s12" onSubmit={this.salvar.bind(this)} method="post">
                         <span>{this.state.errMsg}</span>
                         <div className="row">
                             <div className="input-field col s12">
