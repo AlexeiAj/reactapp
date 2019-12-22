@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Modal } from 'react-materialize';
 import '../scss/Feed.scss';
 import Foto from '../component/Foto';
-import Header from '../component/Header';
 import Footer from '../component/Footer';
 import Navbar from '../component/Navbar';
 
@@ -10,8 +9,7 @@ export default class Galeria extends Component {
 
     constructor() {
         super();
-        // this.state = {posts: [], url: 'http://alexeiaj.duckdns.org:8800'};
-        this.state = {fotos: [], url: 'http://localhost:8800'};
+        this.state = {fotos: [], url: process.env.REACT_APP_URL};
     }
 
     componentWillMount(){
@@ -83,37 +81,38 @@ export default class Galeria extends Component {
         return (
             <div>
                 <Navbar/>
-                <Header/>
-                <div className="container">
-                    <div className="row">
-                        {
-                            this.state.fotos.map(foto => <Foto key={foto.id} foto={foto} url={this.state.url} recarregarGaleriaCallback={() => this.recarregarGaleria()}/>)
-                        }
-                    </div>
-                    <Modal header="Adicionar foto" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
-                        <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post" encType="multipart/form-data">
-                            <span>{this.state.errMsg}</span>
-                            <div className="row">
-                                <div className="file-field input-field col s12">
-                                    <div className="btn">
-                                        <span>File</span>
-                                        <input type="file" ref={ input => this.imagem = input}></input>
-                                    </div>
-                                    <div className="file-path-wrapper">
-                                        <input className="file-path validate" type="text"></input>
+                <div className="container grey lighten-4 feed-container z-depth-1">
+                    <div className="container">
+                        <div className="row">
+                            {
+                                this.state.fotos.map(foto => <Foto key={foto.id} foto={foto} url={this.state.url} recarregarGaleriaCallback={() => this.recarregarGaleria()}/>)
+                            }
+                        </div>
+                        <Modal header="Adicionar foto" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
+                            <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post" encType="multipart/form-data">
+                                <span>{this.state.errMsg}</span>
+                                <div className="row">
+                                    <div className="file-field input-field col s12">
+                                        <div className="btn">
+                                            <span>File</span>
+                                            <input type="file" ref={ input => this.imagem = input}></input>
+                                        </div>
+                                        <div className="file-path-wrapper">
+                                            <input className="file-path validate" type="text"></input>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <br/>
-                            <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
-                                Adicionar
-                                <i className="material-icons right">send</i>
-                            </button>
-                        </form>
-                    </Modal>
+                                <br/>
+                                <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
+                                    Adicionar
+                                    <i className="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </Modal>
                         <div className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</div>
-                    <Footer/>
+                    </div>
                 </div>
+                <Footer/>
             </div>
         );
     }

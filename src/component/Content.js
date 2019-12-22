@@ -51,7 +51,8 @@ export default class Content extends Component {
 
         let post_conteudo = JSON.stringify({
                 texto: this.texto.value,
-                imagem: this.imagem.value
+                imagem: this.imagem.value,
+                link: this.link.value
             });
 
         const requestInfo = {
@@ -131,7 +132,8 @@ export default class Content extends Component {
                         </div>
                         <div className="card-content">
                             {jsonContent.texto}
-                            <p>{content.post_data}{content.post_categoria}</p>
+                            <p>{content.post_data} {content.post_categoria}</p>
+                            <a href={jsonContent.link}>{jsonContent.link}</a>
                         </div>
                     </div>
                 </div>
@@ -142,6 +144,12 @@ export default class Content extends Component {
                             <div className="input-field col s12">
                                 <input defaultValue={content.post_titulo} type="text" id={`post_titulo${content.id}`} className="validate" ref={ input => this.post_titulo = input}/>
                                 <label htmlFor={`post_titulo${content.id}`} className="active">Título</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <input defaultValue={jsonContent.link} type="text" id={`link${content.id}`} className="validate" ref={ input => this.link = input}/>
+                                <label htmlFor={`link${content.id}`} className="active">Link</label>
                             </div>
                         </div>
                         <div className="row">
@@ -190,6 +198,11 @@ export default class Content extends Component {
                         <div className="row">
                             <div className="input-field col s12">
                                 <label>{jsonContent.texto}</label>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="input-field col s12">
+                                <a href={jsonContent.link}>{jsonContent.link}</a>
                             </div>
                         </div>
                     </form>

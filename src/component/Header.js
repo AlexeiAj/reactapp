@@ -5,7 +5,7 @@ import '../scss/Header.scss';
 export default class Header extends Component {
     render(){
         return (
-            <div className="card center-align header-image">
+            <div className="card center-align header-image z-depth-1">
                 <img src={logo} className="card-content center-align logo" alt="logo"/>
             </div>
         );

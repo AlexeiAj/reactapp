@@ -7,8 +7,7 @@ export default class Login extends Component {
 
     constructor() {
         super();
-        // this.state = {login: '', senha: '', errMsg: '', url: 'http://alexeiaj.duckdns.org:8800'};
-        this.state = {login: '', senha: '', errMsg: '', url: 'http://localhost:8800'};
+        this.state = {login: '', senha: '', errMsg: '', url: process.env.REACT_APP_URL};
     }
 
     logar(e){
@@ -50,40 +49,42 @@ export default class Login extends Component {
 
     render(){
         return (
-            <div className="container">
-                <Header/>
-                <h3>Bem vindo ao meu website!</h3>
-                <p>Pagina de login</p>
-        
-                <div className="row">
-                    <div className="col s4"></div>
-                    <div className="col s4">
-                        <div className="row">
-                            <form className="col s12" onSubmit={this.logar.bind(this)} method="post">
-                                <span>{this.state.errMsg}</span>
-                                <div className="row">
-                                    <div className="input-field col s12">
-                                        <input type="text" id="login" className="validate" ref={ input => this.login = input}/>
-                                        <label htmlFor="login">Login</label>
+            <div>
+                <div className="container">
+                    <Header/>
+                    <h3>Bem vindo ao meu website!</h3>
+                    <p>Pagina de login</p>
+            
+                    <div className="row">
+                        <div className="col s4"></div>
+                        <div className="col s4">
+                            <div className="row">
+                                <form className="col s12" onSubmit={this.logar.bind(this)} method="post">
+                                    <span>{this.state.errMsg}</span>
+                                    <div className="row">
+                                        <div className="input-field col s12">
+                                            <input type="text" id="login" className="validate" ref={ input => this.login = input}/>
+                                            <label htmlFor="login">Login</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="input-field col s12">
-                                        <input type="password" id="senha" className="validate" ref={ input => this.senha = input}/>
-                                        <label htmlFor="senha">Senha</label>
+                                    <div className="row">
+                                        <div className="input-field col s12">
+                                            <input type="password" id="senha" className="validate" ref={ input => this.senha = input}/>
+                                            <label htmlFor="senha">Senha</label>
+                                        </div>
                                     </div>
-                                </div>
-                                <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
-                                    Entrar
-                                    <i className="material-icons right">send</i>
-                                </button>
-                            </form>
+                                    <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
+                                        Entrar
+                                        <i className="material-icons right">send</i>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
+                        <div className="col s4"></div>
                     </div>
-                    <div className="col s4"></div>
-                </div>
 
-                <Link to="/listaUsuarios" className="waves-effect waves-light btn grey darken-4">Lista de usuarios</Link>
+                    <Link to="/listaUsuarios" className="waves-effect waves-light btn grey darken-4">Lista de usuarios</Link>
+                </div>
                 <Footer/>
             </div>
         );

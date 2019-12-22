@@ -9,8 +9,7 @@ export default class ListaUsuarios extends Component {
 
     constructor() {
         super();
-        // this.state = {usuarios: [], url: 'http://alexeiaj.duckdns.org:8800'};
-        this.state = {usuarios: [], url: 'http://localhost:8800'};
+        this.state = {usuarios: [], url: process.env.REACT_APP_URL};
     }
 
     componentDidMount(){
@@ -54,53 +53,55 @@ export default class ListaUsuarios extends Component {
 
     render(){
         return (
-            <div className="container">
-                <Header/>
-                <h3>Bem vindo ao cadastro de usuarios!</h3>
-                <p>Lista de usuarios</p>
-        
-                <div className="row">
-                    <div className="col s12">
-                        <table className="table table-hover highlight">
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>Login</th>
-                                    <th>Senha</th>
-                                    <th>Acoes</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.usuarios.map(usuario => <Usuario key={usuario.id} usuario={usuario} url={this.state.url} recarregarUsuariosCallback={() => this.recarregarUsuarios()}/>)
-                                }
-                            </tbody>
-                        </table>
+            <div>
+                <div className="container">
+                    <Header/>
+                    <h3>Bem vindo ao cadastro de usuarios!</h3>
+                    <p>Lista de usuarios</p>
+            
+                    <div className="row">
+                        <div className="col s12">
+                            <table className="table table-hover highlight">
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>Login</th>
+                                        <th>Senha</th>
+                                        <th>Acoes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        this.state.usuarios.map(usuario => <Usuario key={usuario.id} usuario={usuario} url={this.state.url} recarregarUsuariosCallback={() => this.recarregarUsuarios()}/>)
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
 
-                <Link to="/" className="waves-effect waves-light btn grey darken-4">Entrar</Link>
-                <Modal header="Adicionar usuario" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
-                    <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
-                        <span>{this.state.errMsg}</span>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input type="text" id={'login'} className="validate" ref={ input => this.login = input}/>
-                                <label htmlFor={'login'}>Login</label>
+                    <Link to="/" className="waves-effect waves-light btn grey darken-4">Entrar</Link>
+                    <Modal header="Adicionar usuario" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
+                        <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
+                            <span>{this.state.errMsg}</span>
+                            <div className="row">
+                                <div className="input-field col s12">
+                                    <input type="text" id={'login'} className="validate" ref={ input => this.login = input}/>
+                                    <label htmlFor={'login'}>Login</label>
+                                </div>
                             </div>
-                        </div>
-                        <div className="row">
-                            <div className="input-field col s12">
-                                <input type="password" id={'senha'} className="validate" ref={ input => this.senha = input}/>
-                                <label htmlFor={'senha'}>Senha</label>
+                            <div className="row">
+                                <div className="input-field col s12">
+                                    <input type="password" id={'senha'} className="validate" ref={ input => this.senha = input}/>
+                                    <label htmlFor={'senha'}>Senha</label>
+                                </div>
                             </div>
-                        </div>
-                        <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
-                            Adicionar
-                            <i className="material-icons right">send</i>
-                        </button>
-                    </form>
-                </Modal>
+                            <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
+                                Adicionar
+                                <i className="material-icons right">send</i>
+                            </button>
+                        </form>
+                    </Modal>
+                </div>
                 <Footer/>
             </div>
         );

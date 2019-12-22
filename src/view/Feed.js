@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Modal, DatePicker } from 'react-materialize';
 import '../scss/Feed.scss';
 import Content from '../component/Content';
-import Header from '../component/Header';
 import Footer from '../component/Footer';
 import Navbar from '../component/Navbar';
 import ListaFotos from '../component/ListaFotos';
@@ -11,12 +10,11 @@ export default class Feed extends Component {
 
     constructor() {
         super();
-        
-        // this.state = {posts: [], url: 'http://alexeiaj.duckdns.org:8800'};
-        this.state = {posts: [], url: 'http://localhost:8800', search: null};
+        this.state = {posts: [], url: process.env.REACT_APP_URL, search: null};
     }
     
     componentDidMount(){
+
         let token = localStorage.getItem('auth-token');
         if(token === null) this.props.history.replace("/");
 
@@ -68,7 +66,8 @@ export default class Feed extends Component {
 
         let post_conteudo = JSON.stringify({
                 texto: this.texto.value,
-                imagem: this.imagem.value
+                imagem: this.imagem.value,
+                link: this.link.value
             });
 
         const requestInfo = {
@@ -88,7 +87,7 @@ export default class Feed extends Component {
         fetch(uri, requestInfo)
             .then(response => {
                 if(response.ok){
-                    this.post_titulo.value = this.post_data = this.post_categoria.value = this.texto.value = this.imagem.value = '';
+                    this.post_titulo.value = this.post_data = this.post_categoria.value = this.texto.value = this.imagem.value = this.link.value = '';
                     this.recarregarFeed();
                     return;
                 }
@@ -105,54 +104,61 @@ export default class Feed extends Component {
         return (
             <div>
                 <Navbar recarregarFeedCallback={this.recarregarFeed.bind(this)}/>
-                <Header/>
-                <div className="container">
-                    {
-                        this.state.posts.map(content => <Content key={content.id} content={content} url={this.state.url} recarregarFeedCallback={() => this.recarregarFeed()}/>)
-                    }
-                    <Modal header="Adicionar post" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
-                        <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
-                            <span>{this.state.errMsg}</span>
-                            <div className="row">
-                                <div className="input-field col s12">
-                                    <input type="text" id={'post_titulo'} className="validate" ref={ input => this.post_titulo = input}/>
-                                    <label htmlFor={'post_titulo'}>Título</label>
+                <div className="container grey lighten-4 feed-container z-depth-1">
+                    <div className="container">
+                        {
+                            this.state.posts.map(content => <Content key={content.id} content={content} url={this.state.url} recarregarFeedCallback={() => this.recarregarFeed()}/>)
+                        }
+                        <Modal header="Adicionar post" trigger={<div className="waves-effect waves-light btn grey darken-4">Adicionar</div>}>
+                            <form className="col s12" onSubmit={this.adicionar.bind(this)} method="post">
+                                <span>{this.state.errMsg}</span>
+                                <div className="row">
+                                    <div className="input-field col s12">
+                                        <input type="text" id={'post_titulo'} className="validate" ref={ input => this.post_titulo = input}/>
+                                        <label htmlFor={'post_titulo'}>Título</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s12">
-                                    <DatePicker type="text" id={'post_data'} className="validate" onChange={input => this.post_data = input}/>
-                                    <label htmlFor={'post_data'}>Data</label>
+                                <div className="row">
+                                    <div className="input-field col s12">
+                                        <input type="text" id={'link'} className="validate" ref={ input => this.link = input}/>
+                                        <label htmlFor={'link'}>Link</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s12">
-                                    <input type="text" id={'post_categoria'} className="validate" ref={ input => this.post_categoria = input}/>
-                                    <label htmlFor={'post_categoria'}>Categoria</label>
+                                <div className="row">
+                                    <div className="input-field col s12">
+                                        <DatePicker type="text" id={'post_data'} className="validate" onChange={input => this.post_data = input}/>
+                                        <label htmlFor={'post_data'}>Data</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="input-field col s12">
-                                    <input type="text" id={'texto'} className="validate" ref={ input => this.texto = input}/>
-                                    <label htmlFor={'texto'}>Texto</label>
+                                <div className="row">
+                                    <div className="input-field col s12">
+                                        <input type="text" id={'post_categoria'} className="validate" ref={ input => this.post_categoria = input}/>
+                                        <label htmlFor={'post_categoria'}>Categoria</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <ListaFotos url={this.state.url} selecionarCallback={this.selecionarFotoGaleria.bind(this)}/>
-                            <div className="row">
-                                <div className="input-field col s12">
-                                    <input type="text" readOnly id={'imagem'} className="validate" ref={ input => this.imagem = input}/>
+                                <div className="row">
+                                    <div className="input-field col s12">
+                                        <input type="text" id={'texto'} className="validate" ref={ input => this.texto = input}/>
+                                        <label htmlFor={'texto'}>Texto</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <br/>
-                            <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
-                                Adicionar
-                                <i className="material-icons right">send</i>
-                            </button>
-                        </form>
-                    </Modal>
-                    <div className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</div>
-                    <Footer/>
+                                <ListaFotos url={this.state.url} selecionarCallback={this.selecionarFotoGaleria.bind(this)}/>
+                                <div className="row">
+                                    <div className="input-field col s12">
+                                        <input type="text" readOnly id={'imagem'} className="validate" ref={ input => this.imagem = input}/>
+                                    </div>
+                                </div>
+                                <br/>
+                                <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
+                                    Adicionar
+                                    <i className="material-icons right">send</i>
+                                </button>
+                            </form>
+                        </Modal>
+                        <div className="waves-effect waves-light btn grey darken-1 logout" onClick={this.deslogar.bind(this)}>Logout</div>
+                    </div>
                 </div>
+                <Footer/>
             </div>
         );
     }
