@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal } from 'react-materialize';
+import '../scss/Usuarios.scss';
 
 export default class Usuario extends Component {
 
@@ -87,7 +88,7 @@ export default class Usuario extends Component {
                 <td><span>{usuario.senha}</span></td>
                 <td>
                     <div>
-                        <div className="waves-effect waves-light btn grey darken-4" onClick={this.openCloseModalAlterar.bind(this, true)}><i className="material-icons">create</i></div>
+                        <div className="waves-effect waves-light btn grey darken-4 button-alterar" onClick={this.openCloseModalAlterar.bind(this, true)}><i className="material-icons">create</i></div>
                         <div className="waves-effect waves-light btn grey darken-4" onClick={this.excluir.bind(this)}><i className="material-icons">delete</i></div>
                     </div>
                 </td>

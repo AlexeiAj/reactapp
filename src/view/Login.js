@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../component/Header';
-import Footer from '../component/Footer';
+import logo from '../image/logo.png';
+import '../scss/Login.scss';
 
 export default class Login extends Component {
 
@@ -49,43 +49,46 @@ export default class Login extends Component {
 
     render(){
         return (
-            <div>
-                <div className="container">
-                    <Header/>
-                    <h3>Bem vindo ao meu website!</h3>
-                    <p>Pagina de login</p>
-            
-                    <div className="row">
-                        <div className="col s4"></div>
-                        <div className="col s4">
-                            <div className="row">
+            <div className="container">
+                <div className="row">
+                    <div className="col s2"></div>
+                    <div className="col s8">
+                        <div className="card horizontal card-horizontal-login center">
+                            <div className="card-image">
+                                <img src={logo} className="card-content center-align logo" alt="logo"/>
+                            </div>
+                            <div className="card-stacked">
                                 <form className="col s12" onSubmit={this.logar.bind(this)} method="post">
-                                    <span>{this.state.errMsg}</span>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input type="text" id="login" className="validate" ref={ input => this.login = input}/>
-                                            <label htmlFor="login">Login</label>
+                                    <div className="card-content card-login">
+                                        <div className="container container-login">
+                                            <span>{this.state.errMsg}</span>
+                                            <div className="row">
+                                                <div className="input-field col s12">
+                                                    <input type="text" id="login" className="validate" ref={ input => this.login = input}/>
+                                                    <label htmlFor="login">Login</label>
+                                                </div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="input-field col s12">
+                                                    <input type="password" id="senha" className="validate" ref={ input => this.senha = input}/>
+                                                    <label htmlFor="senha">Senha</label>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="row">
-                                        <div className="input-field col s12">
-                                            <input type="password" id="senha" className="validate" ref={ input => this.senha = input}/>
-                                            <label htmlFor="senha">Senha</label>
-                                        </div>
+                                    <div className="card-action">
+                                        <button className="btn waves-effect waves-light grey darken-4 button-entrar" type="submit" name="action">
+                                            Entrar
+                                            <i className="material-icons right">send</i>
+                                        </button>
+                                        <Link to="/listaUsuarios" className="waves-effect waves-light btn grey darken-4">Lista de usuarios</Link>
                                     </div>
-                                    <button className="btn waves-effect waves-light grey darken-4" type="submit" name="action">
-                                        Entrar
-                                        <i className="material-icons right">send</i>
-                                    </button>
                                 </form>
                             </div>
                         </div>
-                        <div className="col s4"></div>
                     </div>
-
-                    <Link to="/listaUsuarios" className="waves-effect waves-light btn grey darken-4">Lista de usuarios</Link>
+                    <div className="col s2"></div>
                 </div>
-                <Footer/>
             </div>
         );
     }
